@@ -19,6 +19,7 @@ public:
 		if (!isEmpty()) {
 			char temp;
 			temp = stack[tos];
+			stack[tos] = ' ';
 			tos--;
 			return temp;
 		}
@@ -67,6 +68,7 @@ public:
 		if (!isEmpty()) {
 			float temp;
 			temp = stack[tos];
+			stack[tos] = 0;
 			tos--;
 			return temp;
 		}

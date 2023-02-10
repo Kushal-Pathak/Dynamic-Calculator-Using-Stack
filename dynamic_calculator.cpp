@@ -16,14 +16,9 @@ string postfix(string);
 float evaluate(string);
 
 int main() {
-	//infix = "1+(2-3)*4/5";
-	infix = "(3+2*(3-1))/2";
-	cout << infix<<endl;
-	cout<<postfix(infix)<<endl;
-	cout << evaluate(infix);
-	//cout << "Question: " << infix << endl;
-
-	cout << endl;
+	cout << "Enter expression eg: 2+3*(2-1)+1 : ";
+	cin >> infix;
+	cout << evaluate(postfix(infix)) << endl;
 	system("pause");
 	return 0;
 }
@@ -83,7 +78,7 @@ string postfix(string s) {
 	while (current_symbol) {
 		if (isOperand(current_symbol)) post += current_symbol;
 		if (isLeftParenthesis(current_symbol)) temp2.push(current_symbol);
-		if (isRightParenthesis(current_symbol)) { //right discard garni
+		if (isRightParenthesis(current_symbol)) { 
 			while (temp2.top() != '(') {
 				post += temp2.pop();
 			}
@@ -135,23 +130,16 @@ float apply_operator(float a, char op, float b) {
 }
 
 float evaluate(string s) {
-	Num_Stack temp;
-	float a, b, res, ans;
-	int location = 0;
-	char current_symbol = s[location];
-	while (current_symbol) {
-		if (isOperand(current_symbol)) {
-			temp.push((float)convert(current_symbol));
-		}
+	Num_Stack stack;
+	char current_symbol = ' ';
+	for(int i = 0; i < s.length(); i++){
+		current_symbol = s[i];
+		if (isOperand(current_symbol)) stack.push((float)convert(current_symbol));
 		if (isOperator(current_symbol)) {
-			a = temp.pop();
-			b = temp.pop();
-			res = apply_operator(a, current_symbol, b);
-			temp.push(res);
+			float a = stack.pop(), b = stack.pop();
+			float c = apply_operator(b, current_symbol, a);
+			stack.push(c);
 		}
-		location++;
-		current_symbol = s[location];
 	}
-	ans = temp.pop();
-	return ans;
+	return stack.pop();
 }
