@@ -12,16 +12,17 @@ int isRightParenthesis(char);
 int precedence(char);
 int convert(char);
 float apply_operator(float,char,float);
-Stack postfix(string);
-float evaluate(Stack);
+string postfix(string);
+float evaluate(string);
 
 int main() {
-	Stack s1, s2;
-	//infix = "1+2-3*4/5";
-	cin >> infix;
-	s1 = postfix(infix);
-	cout << "Question: " << infix << endl;
-	cout << "Ans: " << evaluate(s1);
+	//infix = "1+(2-3)*4/5";
+	infix = "(3+2*(3-1))/2";
+	cout << infix<<endl;
+	cout<<postfix(infix)<<endl;
+	cout << evaluate(infix);
+	//cout << "Question: " << infix << endl;
+
 	cout << endl;
 	system("pause");
 	return 0;
@@ -74,22 +75,23 @@ int precedence(char c) {
 	}
 }
 
-Stack postfix(string s) {
-	Stack temp1, temp2;
+string postfix(string s) {
+	Stack temp2;
+	string post;
 	int location = 0;
 	char current_symbol = s[location];
 	while (current_symbol) {
-		if (isOperand(current_symbol)) temp1.push(current_symbol);
+		if (isOperand(current_symbol)) post += current_symbol;
 		if (isLeftParenthesis(current_symbol)) temp2.push(current_symbol);
 		if (isRightParenthesis(current_symbol)) { //right discard garni
 			while (temp2.top() != '(') {
-				temp1.push(temp2.pop());
+				post += temp2.pop();
 			}
 			temp2.pop();
 		}
 		if (isOperator(current_symbol)) {
 			while (precedence(temp2.top()) >= precedence(current_symbol)) {
-				temp1.push(temp2.pop());
+				post += temp2.pop();
 			}
 			temp2.push(current_symbol);
 		}
@@ -97,9 +99,9 @@ Stack postfix(string s) {
 		current_symbol = s[location];
 	}
 	while (!temp2.isEmpty()) {
-		temp1.push(temp2.pop());
+		post += temp2.pop();
 	}
-	return temp1;
+	return post;
 }
 
 int convert(char c) {
@@ -132,12 +134,12 @@ float apply_operator(float a, char op, float b) {
 	return 0;
 }
 
-float evaluate(Stack s) {
+float evaluate(string s) {
 	Num_Stack temp;
-	float a, b, res;
-	float ans;
-	char current_symbol = s.pop();
-	while (!s.isEmpty()) {
+	float a, b, res, ans;
+	int location = 0;
+	char current_symbol = s[location];
+	while (current_symbol) {
 		if (isOperand(current_symbol)) {
 			temp.push((float)convert(current_symbol));
 		}
@@ -147,7 +149,8 @@ float evaluate(Stack s) {
 			res = apply_operator(a, current_symbol, b);
 			temp.push(res);
 		}
-		current_symbol = s.pop();
+		location++;
+		current_symbol = s[location];
 	}
 	ans = temp.pop();
 	return ans;
