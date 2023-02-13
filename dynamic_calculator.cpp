@@ -23,10 +23,6 @@ int main() {
 	return 0;
 }
 
-char scan(int n) {
-	return infix[n];
-}
-
 string postfix() {
 	string post;
 	int location = 0;
